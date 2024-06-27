@@ -1,30 +1,30 @@
 import DayState from "@/components/DayState";
+import { kv } from "@vercel/kv";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
-  const habits = {
-    "drink water": {
-      "2024-06-24": true,
-      "2024-06-25": false,
-      "2024-06-26": false,
-      "2024-06-27": true,
-      "2024-06-28": true,
-    },
-    "study coding": {
-      "2024-06-24": false,
-      "2024-06-25": true,
-      "2024-06-26": false,
-      "2024-06-27": true,
-      "2024-06-28": false,
-    },
-  };
+type Habits = {
+  [habit: string]: Record<string, boolean>;
+} | null;
+
+export default async function Home() {
+  const habits: Habits = await kv.hgetall("habits");
   const today = new Date();
   const todayWeekDay = today.getDay();
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const sortedWeekDays = weekDays
     .slice(todayWeekDay + 1)
     .concat(weekDays.slice(0, todayWeekDay + 1));
+
+  const last7Days = weekDays
+    .map((_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() - index);
+
+      return date.toISOString().slice(0, 10);
+    })
+    .reverse();
+
   return (
     <main className="container relative flex flex-col gap-8 px-4 pt-16">
       {habits === null ||
@@ -50,12 +50,12 @@ export default function Home() {
               </button>
             </div>
             <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
-              {sortedWeekDays.map((day) => (
+              {sortedWeekDays.map((day, index) => (
                 <div className="flex flex-col last:font-bold" key={day}>
                   <span className="font-sans text-xs text-white text-center">
                     {day}
                   </span>
-                  <DayState day={true} />
+                  <DayState day={habitStreak[last7Days[index]]} />
                 </div>
               ))}
             </section>
