@@ -26,7 +26,7 @@ export default async function Habit({ params: { habitName } }: HabitProps) {
         href={"/"}
       >
         <ArrowIcon width={15} height={15} />
-        Voltar
+        Back
       </Link>
 
       <Calendar habit={decodeHabit} habitStreak={habitStreak} />
