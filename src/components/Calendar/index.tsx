@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import ArrowIcon from "../ArrowIcon";
 import { weekDays } from "@/utils/weekdays";
 
@@ -20,16 +21,53 @@ const currentMonth = currentDate.getMonth();
 const currentYear = currentDate.getFullYear();
 
 export default function Calendar() {
-  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+  const [month, setMonth] = useState(currentMonth);
+  const [year, setYear] = useState(currentYear);
+  const [daysInMonth, setDaysInMonth] = useState(
+    getDaysInMonth(currentMonth, currentYear)
+  );
+  const [selectedDate, setSelectDate] = useState(new Date());
   console.log("🚀 ~ Habit ~ daysinMonth:", daysInMonth);
+
+  useEffect(() => {
+    setDaysInMonth(getDaysInMonth(month, year));
+    setSelectDate(new Date(year, month, 1));
+  }, [month, year]);
+
+  function goToPreviousMonth() {
+    if (month === 0) {
+      setYear(year - 1);
+      setMonth(11);
+    } else {
+      setMonth(month - 1);
+    }
+  }
+  function goToNextMonth() {
+    if (month === 11) {
+      setYear(year + 1);
+      setMonth(0);
+    } else {
+      setMonth(month + 1);
+    }
+  }
+
+  function getMonthDateString() {
+    const monthName = selectedDate.toLocaleString("en-US", { month: "long" });
+
+    return monthName[0].toUpperCase() + monthName.slice(1);
+  }
+
   return (
     <section className="w-full my-2 rounded-md bg-neutral-800">
       <div className="flex justify-between mx-2 my-4 font-sans  text-neutral-400">
-        <button>
+        <button onClick={goToPreviousMonth}>
           <ArrowIcon width={15} height={15} className="stroke-neutral-400" />
         </button>
-        <span>Julho de 2024</span>
-        <button>
+        {/* <span>Julho de {year}</span> */}
+        <span>
+          {getMonthDateString()} de {year}
+        </span>
+        <button onClick={goToNextMonth}>
           <ArrowIcon
             width={15}
             height={15}
