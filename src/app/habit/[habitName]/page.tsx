@@ -12,9 +12,7 @@ type HabitProps = {
 function getDaysInMonth(month: number, year: number) {
   const date = new Date(year, month, 1);
   const firstDayWeek = date.getDay();
-  const numberOffEmptyDays = Array(firstDayWeek === 0 ? 6 : firstDayWeek).fill(
-    null
-  );
+  const numberOffEmptyDays = Array(firstDayWeek).fill(null);
   const days = [...numberOffEmptyDays];
   while (date.getMonth() === month) {
     days.push(new Date(date));
