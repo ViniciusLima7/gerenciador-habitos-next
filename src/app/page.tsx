@@ -1,4 +1,5 @@
 import DayState from "@/components/DayState";
+import { weekDays } from "@/utils/weekdays";
 import { kv } from "@vercel/kv";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +12,6 @@ export default async function Home() {
   const habits: Habits = await kv.hgetall("habits");
   const today = new Date();
   const todayWeekDay = today.getDay();
-  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const sortedWeekDays = weekDays
     .slice(todayWeekDay + 1)
     .concat(weekDays.slice(0, todayWeekDay + 1));
@@ -49,16 +49,18 @@ export default async function Home() {
                 />
               </button>
             </div>
-            <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
-              {sortedWeekDays.map((day, index) => (
-                <div className="flex flex-col last:font-bold" key={day}>
-                  <span className="font-sans text-xs text-white text-center">
-                    {day}
-                  </span>
-                  <DayState day={habitStreak[last7Days[index]]} />
-                </div>
-              ))}
-            </section>
+            <Link href={`habit/${habit}`}>
+              <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">
+                {sortedWeekDays.map((day, index) => (
+                  <div className="flex flex-col last:font-bold" key={day}>
+                    <span className="font-sans text-xs text-white text-center">
+                      {day}
+                    </span>
+                    <DayState day={habitStreak[last7Days[index]]} />
+                  </div>
+                ))}
+              </section>
+            </Link>
           </div>
         ))}
 
