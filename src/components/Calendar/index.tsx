@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ArrowIcon from "../ArrowIcon";
 import { weekDays } from "@/utils/weekdays";
 import DayState from "../DayState";
+import { toggleHabit } from "@/app/actions";
 
 function getDaysInMonth(month: number, year: number) {
   const date = new Date(year, month, 1);
@@ -95,7 +96,18 @@ export default function Calendar({ habit, habitStreak }: CalendarProps) {
           </div>
         ))}
         {daysInMonth.map((day, index) => (
-          <div key={index} className="flex flex-col items-center p-2">
+          <div
+            key={index}
+            className="flex flex-col items-center p-2"
+            onClick={() =>
+              toggleHabit({
+                habit,
+                habitStreak,
+                date: getDayString(day),
+                done: habitStreak ? habitStreak[getDayString(day)] : true,
+              })
+            }
+          >
             <span className="font-sans text-xs font-light text-neutral-400 text-center">
               {day?.getDate()}
             </span>
