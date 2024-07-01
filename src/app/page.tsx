@@ -3,6 +3,8 @@ import { weekDays } from "@/utils/weekdays";
 import { kv } from "@vercel/kv";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteHabit } from "./actions";
+import DeleteButton from "@/components/DeleteButton";
 
 export type Habits = {
   [habit: string]: Record<string, boolean>;
@@ -40,14 +42,7 @@ export default async function Home() {
               <span className="text-xl font-light text-white font-sans">
                 {habit}
               </span>
-              <button>
-                <Image
-                  src={"/trash.svg"}
-                  width={20}
-                  height={20}
-                  alt="Icon trash red"
-                />
-              </button>
+              <DeleteButton habit={habit} />
             </div>
             <Link href={`habit/${habit}`}>
               <section className="grid grid-cols-7 bg-neutral-800 rounded-md p-2">

@@ -56,7 +56,7 @@ export default function Calendar({ habit, habitStreak }: CalendarProps) {
     }
   }
 
-  function getMonthDateString() {
+  function getMonthString() {
     const monthName = selectedDate.toLocaleString("en-US", { month: "long" });
 
     return monthName[0].toUpperCase() + monthName.slice(1);
@@ -76,7 +76,7 @@ export default function Calendar({ habit, habitStreak }: CalendarProps) {
           <ArrowIcon width={15} height={15} className="stroke-neutral-400" />
         </button>
         <span>
-          {getMonthDateString()} de {year}
+          {getMonthString()} de {year}
         </span>
         <button onClick={goToNextMonth}>
           <ArrowIcon
