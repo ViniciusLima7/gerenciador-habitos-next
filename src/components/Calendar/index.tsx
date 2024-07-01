@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import ArrowIcon from "../ArrowIcon";
 import { weekDays } from "@/utils/weekdays";
+import DayState from "../DayState";
 
 function getDaysInMonth(month: number, year: number) {
   const date = new Date(year, month, 1);
@@ -20,14 +21,18 @@ const currentDay = currentDate.getDate();
 const currentMonth = currentDate.getMonth();
 const currentYear = currentDate.getFullYear();
 
-export default function Calendar() {
+type CalendarProps = {
+  habit: string;
+  habitStreak: Record<string, boolean> | null;
+};
+
+export default function Calendar({ habit, habitStreak }: CalendarProps) {
   const [month, setMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
   const [daysInMonth, setDaysInMonth] = useState(
     getDaysInMonth(currentMonth, currentYear)
   );
   const [selectedDate, setSelectDate] = useState(new Date());
-  console.log("🚀 ~ Habit ~ daysinMonth:", daysInMonth);
 
   useEffect(() => {
     setDaysInMonth(getDaysInMonth(month, year));
@@ -57,13 +62,19 @@ export default function Calendar() {
     return monthName[0].toUpperCase() + monthName.slice(1);
   }
 
+  function getDayString(day: Date) {
+    return `${year.toString()}-${(month + 1).toString().padStart(2, "0")}-${day
+      .getDate()
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
   return (
     <section className="w-full my-2 rounded-md bg-neutral-800">
       <div className="flex justify-between mx-2 my-4 font-sans  text-neutral-400">
         <button onClick={goToPreviousMonth}>
           <ArrowIcon width={15} height={15} className="stroke-neutral-400" />
         </button>
-        {/* <span>Julho de {year}</span> */}
         <span>
           {getMonthDateString()} de {year}
         </span>
@@ -88,6 +99,11 @@ export default function Calendar() {
             <span className="font-sans text-xs font-light text-neutral-400 text-center">
               {day?.getDate()}
             </span>
+            {day && (
+              <DayState
+                day={habitStreak ? habitStreak[getDayString(day)] : undefined}
+              />
+            )}
           </div>
         ))}
       </div>

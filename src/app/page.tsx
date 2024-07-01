@@ -4,7 +4,7 @@ import { kv } from "@vercel/kv";
 import Image from "next/image";
 import Link from "next/link";
 
-type Habits = {
+export type Habits = {
   [habit: string]: Record<string, boolean>;
 } | null;
 

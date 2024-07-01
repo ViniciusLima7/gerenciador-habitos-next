@@ -1,6 +1,5 @@
 import ArrowIcon from "@/components/ArrowIcon";
 import Calendar from "@/components/Calendar";
-import { weekDays } from "@/utils/weekdays";
 import { kv } from "@vercel/kv";
 import Link from "next/link";
 
@@ -12,8 +11,10 @@ type HabitProps = {
 
 export default async function Habit({ params: { habitName } }: HabitProps) {
   const decodeHabit = decodeURI(habitName);
-  const habitStreak = await kv.hget("habits", decodeHabit);
-  // console.log("🚀 ~ Habit ~ habitStreak:", habitStreak);
+  const habitStreak: Record<string, boolean> | null = await kv.hget(
+    "habits",
+    decodeHabit
+  );
 
   return (
     <main className="container relative flex flex-col gap8 px-12 pt-16">
@@ -28,7 +29,7 @@ export default async function Habit({ params: { habitName } }: HabitProps) {
         Voltar
       </Link>
 
-      <Calendar />
+      <Calendar habit={decodeHabit} habitStreak={habitStreak} />
     </main>
   );
 }
